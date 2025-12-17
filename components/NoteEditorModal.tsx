@@ -221,7 +221,7 @@ export const NoteEditorModal: React.FC<NoteEditorModalProps> = ({
 
                 <View style={styles.bodyInputContainer}>
                   <View style={styles.bodyLabelRow}>
-                    <Text style={[styles.bodyLabel, isEditMode && { color: noteColors.text, opacity: 0.8 }]}>Body</Text>
+                    <Text style={[styles.bodyLabel, isEditMode && { color: noteColors.text, opacity: 0.8 }]}>Content</Text>
                     <View onTouchStart={handleVoiceButtonPress} onMouseDown={handleVoiceButtonPress}>
                       <VoiceInputButton
                         onTranscript={handleVoiceTranscript}
