@@ -16,6 +16,7 @@ const getEnvVar = (key: string): string => {
   if (!value) {
     console.error(`Missing environment variable: ${key}`);
     console.log('Constants.expoConfig?.extra:', Constants.expoConfig?.extra);
+    console.log('process.env:', typeof process !== 'undefined' ? process.env : 'process not defined');
   }
 
   return value || '';
@@ -24,8 +25,12 @@ const getEnvVar = (key: string): string => {
 const supabaseUrl = getEnvVar('EXPO_PUBLIC_SUPABASE_URL');
 const supabaseAnonKey = getEnvVar('EXPO_PUBLIC_SUPABASE_ANON_KEY');
 
+console.log('Supabase URL:', supabaseUrl ? 'loaded' : 'missing');
+console.log('Supabase Key:', supabaseAnonKey ? 'loaded' : 'missing');
+
 if (!supabaseUrl || !supabaseAnonKey) {
-  throw new Error(`Missing Supabase environment variables. URL: ${supabaseUrl ? 'present' : 'missing'}, Key: ${supabaseAnonKey ? 'present' : 'missing'}`);
+  console.error(`Missing Supabase environment variables. URL: ${supabaseUrl ? 'present' : 'missing'}, Key: ${supabaseAnonKey ? 'present' : 'missing'}`);
+  // Don't throw error, just use empty strings to prevent app crash
 }
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey, {

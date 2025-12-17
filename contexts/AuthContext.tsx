@@ -32,13 +32,16 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const loadUser = async () => {
     try {
+      console.log('Loading user from storage...');
       const storedUser = await AsyncStorage.getItem(USER_STORAGE_KEY);
+      console.log('Stored user:', storedUser ? 'found' : 'not found');
       if (storedUser) {
         setUser(JSON.parse(storedUser));
       }
     } catch (error) {
       console.error('Failed to load user:', error);
     } finally {
+      console.log('Auth loading complete');
       setIsLoading(false);
     }
   };

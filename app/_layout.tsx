@@ -14,13 +14,16 @@ function RootLayoutNav() {
   const router = useRouter();
 
   useEffect(() => {
+    console.log('RootLayoutNav effect:', { isLoading, isAuthenticated, segments });
     if (isLoading) return;
 
     const inAuthGroup = segments[0] === '(auth)';
 
     if (!isAuthenticated && !inAuthGroup) {
+      console.log('Redirecting to login');
       router.replace('/(auth)/login');
     } else if (isAuthenticated && inAuthGroup) {
+      console.log('Redirecting to tabs');
       router.replace('/(tabs)');
     }
   }, [isAuthenticated, isLoading, segments]);
@@ -45,12 +48,17 @@ export default function RootLayout() {
   });
 
   useEffect(() => {
+    console.log('Font loading state:', { fontsLoaded, fontError });
     if (fontsLoaded || fontError) {
+      console.log('Hiding splash screen');
       SplashScreen.hideAsync();
     }
   }, [fontsLoaded, fontError]);
 
+  console.log('RootLayout render:', { fontsLoaded, fontError });
+
   if (!fontsLoaded && !fontError) {
+    console.log('Waiting for fonts...');
     return null;
   }
 

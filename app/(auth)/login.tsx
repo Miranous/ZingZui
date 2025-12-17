@@ -23,6 +23,7 @@ import { useAuth } from '../../contexts/AuthContext';
 import { theme } from '../../theme/theme';
 
 export default function LoginScreen() {
+  console.log('LoginScreen rendering');
   const router = useRouter();
   const { login } = useAuth();
 
