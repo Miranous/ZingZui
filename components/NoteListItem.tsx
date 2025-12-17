@@ -227,12 +227,12 @@ export const NoteListItem: React.FC<NoteListItemProps> = ({
 
 const styles = StyleSheet.create({
   container: {
-    marginBottom: theme.spacing.md,
+    marginBottom: theme.spacing.sm,
   },
   card: {
     width: '100%',
     borderRadius: theme.radii.card,
-    padding: theme.spacing.lg,
+    padding: theme.spacing.md,
     borderWidth: 1,
     borderColor: 'rgba(255,255,255,0.2)',
   },
@@ -245,11 +245,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'flex-start',
-    marginBottom: theme.spacing.xs,
+    marginBottom: 0,
   },
   titleContainer: {
     flex: 1,
-    marginRight: theme.spacing.md,
+    marginRight: theme.spacing.sm,
   },
   titleRow: {
     flexDirection: 'row',
