@@ -7,7 +7,7 @@ import {
   Pressable,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import { Check, X, XCircle } from 'lucide-react-native';
+import { Check, X, Trash2 } from 'lucide-react-native';
 import { GlassCard } from './GlassCard';
 import { theme } from '../theme/theme';
 
@@ -52,8 +52,7 @@ export const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
                 onPress={onNo}
                 style={[styles.iconButton, styles.noButton]}
               >
-                <XCircle size={20} color={theme.palette.danger} />
-
+                <Trash2 size={20} color={theme.palette.danger} />
               </Pressable>
 
               <Pressable
