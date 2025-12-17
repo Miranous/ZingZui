@@ -112,8 +112,8 @@ const styles = StyleSheet.create({
     borderColor: theme.palette.glassBorder,
   },
   noButton: {
-    backgroundColor: 'rgba(255,90,95,0.2)',
-    borderColor: 'rgba(255,90,95,0.4)',
+    backgroundColor: theme.palette.inputBg,
+    borderColor: theme.palette.glassBorder,
   },
   yesButton: {
     backgroundColor: theme.palette.primaryGradient[0] + '20',
