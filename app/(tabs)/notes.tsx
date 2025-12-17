@@ -475,6 +475,15 @@ export default function NotesBrowserScreen() {
                 note={item}
                 isSelected={item.id === selectedNoteId}
                 onPress={() => handleSelectNote(item.id)}
+                onDoublePress={() => {
+                  setSelectedNoteId(item.id);
+                  setEditingNote(item);
+                  if (item.type === 'tasklist') {
+                    setIsTaskListEditorVisible(true);
+                  } else {
+                    setIsEditorVisible(true);
+                  }
+                }}
                 showPreview={showPreview}
               />
             )}

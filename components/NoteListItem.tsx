@@ -19,6 +19,7 @@ interface NoteListItemProps {
   note: Note;
   isSelected: boolean;
   onPress: () => void;
+  onDoublePress?: () => void;
   showPreview?: boolean;
 }
 
@@ -49,10 +50,13 @@ export const NoteListItem: React.FC<NoteListItemProps> = ({
   note,
   isSelected,
   onPress,
+  onDoublePress,
   showPreview = false,
 }) => {
   const scale = useSharedValue(1);
   const noteColors = getColorForNote(note.id);
+  const lastPressTime = React.useRef<number>(0);
+  const DOUBLE_PRESS_DELAY = 300; // milliseconds
 
   const animatedStyle = useAnimatedStyle(() => ({
     transform: [{ scale: scale.value }],
@@ -64,6 +68,21 @@ export const NoteListItem: React.FC<NoteListItemProps> = ({
 
   const handlePressOut = () => {
     scale.value = withSpring(1, { damping: 15, stiffness: 300 });
+  };
+
+  const handlePress = () => {
+    const now = Date.now();
+    const timeSinceLastPress = now - lastPressTime.current;
+
+    if (timeSinceLastPress < DOUBLE_PRESS_DELAY && onDoublePress) {
+      // Double press detected
+      lastPressTime.current = 0; // Reset to avoid triple-press
+      onDoublePress();
+    } else {
+      // Single press
+      lastPressTime.current = now;
+      onPress();
+    }
   };
 
   const formatDate = (dateString: string) => {
@@ -147,7 +166,7 @@ export const NoteListItem: React.FC<NoteListItemProps> = ({
 
   return (
     <AnimatedPressable
-      onPress={onPress}
+      onPress={handlePress}
       onPressIn={handlePressIn}
       onPressOut={handlePressOut}
       style={[animatedStyle, styles.container]}
