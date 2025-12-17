@@ -539,11 +539,14 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: theme.spacing.xl,
     paddingTop: 50,
-    paddingBottom: 100,
+    paddingBottom: 20,
   },
   toolbarWrapper: {
-    width: '100%',
-    marginTop: theme.spacing.xl,
+    position: 'absolute',
+    bottom: 20,
+    left: theme.spacing.xl,
+    right: theme.spacing.xl,
+    width: 'auto',
     overflow: 'visible',
     zIndex: 100,
   },
@@ -648,6 +651,7 @@ const styles = StyleSheet.create({
   },
   listContent: {
     paddingTop: theme.spacing.xl,
+    paddingBottom: 100,
   },
   searchInfo: {
     flexDirection: 'row',
