@@ -1,6 +1,5 @@
 import React from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Linking } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Linking, ImageBackground } from 'react-native';
 import { useRouter } from 'expo-router';
 import { GlassCard } from '../../components/GlassCard';
 import { ThemedButton } from '../../components/ThemedButton';
@@ -17,9 +16,10 @@ export default function ProfileScreen() {
   };
 
   return (
-    <LinearGradient
-      colors={theme.palette.backgroundGradient}
+    <ImageBackground
+      source={require('../../assets/images/image copy.png')}
       style={styles.container}
+      resizeMode="cover"
     >
       <ScrollView contentContainerStyle={styles.content}>
         <Text style={styles.title}>Profile</Text>
@@ -59,7 +59,7 @@ export default function ProfileScreen() {
           </Text>
         </View>
       </ScrollView>
-    </LinearGradient>
+    </ImageBackground>
   );
 }
 

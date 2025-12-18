@@ -14,8 +14,8 @@ import {
   AccessibilityInfo,
   Pressable,
   Platform,
+  ImageBackground,
 } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
 import { Plus, Edit2, Trash2, FileText, Search, AlignLeft, ArrowDownAZ, ArrowUpAZ, Clock, ListTodo } from 'lucide-react-native';
 import { GlassCard } from '../../components/GlassCard';
 import { ThemedButton } from '../../components/ThemedButton';
@@ -451,9 +451,10 @@ export default function NotesBrowserScreen() {
   );
 
   return (
-    <LinearGradient
-      colors={theme.palette.backgroundGradient}
+    <ImageBackground
+      source={require('../../assets/images/image copy.png')}
       style={styles.container}
+      resizeMode="cover"
     >
       <View style={styles.content}>
         {isLoading ? (
@@ -536,7 +537,7 @@ export default function NotesBrowserScreen() {
         onSearch={handleSearch}
         onClose={() => setIsSearchModalVisible(false)}
       />
-    </LinearGradient>
+    </ImageBackground>
   );
 }
 
