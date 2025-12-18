@@ -32,17 +32,6 @@ export default function ProfileScreen() {
 
           <Text style={styles.label}>Email</Text>
           <Text style={styles.value}>{user?.email}</Text>
-
-          <Text style={styles.label}>Member Since</Text>
-          <Text style={styles.value}>
-            {user?.createdAt
-              ? new Date(user.createdAt).toLocaleDateString('en-US', {
-                  year: 'numeric',
-                  month: 'long',
-                  day: 'numeric',
-                })
-              : 'N/A'}
-          </Text>
         </GlassCard>
 
         <ThemedButton
@@ -113,7 +102,7 @@ const styles = StyleSheet.create({
   },
   supportEmail: {
     ...theme.typography.caption,
-    color: theme.palette.primary,
+    color: theme.palette.primaryGradient[0],
     textDecorationLine: 'underline',
   },
   copyright: {

@@ -53,7 +53,7 @@ export default function NotesBrowserScreen() {
       case 'updated':
       default:
         return sorted.sort((a, b) =>
-          new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime()
+          new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
         );
     }
   }, [rawNotes, sortMode]);
@@ -250,7 +250,7 @@ export default function NotesBrowserScreen() {
   const renderToolbar = () => (
     <View style={styles.toolbarWrapper}>
       <View style={[styles.toolbar, { overflow: 'visible' }]}>
-        <GlassCard overflow="visible">
+        <GlassCard>
           <View style={styles.toolbarContent}>
         <View style={styles.buttonContainer}>
           <Pressable

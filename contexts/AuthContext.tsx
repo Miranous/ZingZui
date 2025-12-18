@@ -1,12 +1,12 @@
 /**
  * Authentication Context
  *
- * Provides authentication state and methods throughout the app
+ * Provides authentication state and methods throughout the app using Supabase Auth
  */
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { User, signup as signupUser, login as loginUser, logout as logoutUser } from '../lib/auth';
+import { supabase } from '../lib/supabase';
+import { User, signup as signupUser, login as loginUser, logout as logoutUser, getCurrentUser } from '../lib/auth';
 
 interface AuthContextType {
   user: User | null;
@@ -19,29 +19,44 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-const USER_STORAGE_KEY = '@auth_user';
-
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  // Load user from storage on mount
   useEffect(() => {
-    loadUser();
+    loadSession();
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      (async () => {
+        if (session?.user) {
+          const result = await getCurrentUser();
+          if (result.user) {
+            setUser(result.user);
+          }
+        } else {
+          setUser(null);
+        }
+      })();
+    });
+
+    return () => {
+      subscription.unsubscribe();
+    };
   }, []);
 
-  const loadUser = async () => {
+  const loadSession = async () => {
     try {
-      console.log('Loading user from storage...');
-      const storedUser = await AsyncStorage.getItem(USER_STORAGE_KEY);
-      console.log('Stored user:', storedUser ? 'found' : 'not found');
-      if (storedUser) {
-        setUser(JSON.parse(storedUser));
+      const { data: { session } } = await supabase.auth.getSession();
+
+      if (session?.user) {
+        const result = await getCurrentUser();
+        if (result.user) {
+          setUser(result.user);
+        }
       }
     } catch (error) {
-      console.error('Failed to load user:', error);
+      console.error('Failed to load session:', error);
     } finally {
-      console.log('Auth loading complete');
       setIsLoading(false);
     }
   };
@@ -60,7 +75,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     if (result.user) {
       setUser(result.user);
-      await AsyncStorage.setItem(USER_STORAGE_KEY, JSON.stringify(result.user));
     }
 
     return {};
@@ -75,7 +89,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     if (result.user) {
       setUser(result.user);
-      await AsyncStorage.setItem(USER_STORAGE_KEY, JSON.stringify(result.user));
     }
 
     return {};
@@ -84,7 +97,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const logout = async () => {
     await logoutUser();
     setUser(null);
-    await AsyncStorage.removeItem(USER_STORAGE_KEY);
   };
 
   const value = {
