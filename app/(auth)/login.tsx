@@ -13,8 +13,8 @@ import {
   Platform,
   ScrollView,
   Pressable,
-  ImageBackground,
 } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
 import { useRouter } from 'expo-router';
 import { GlassCard } from '../../components/GlassCard';
 import { ThemedButton } from '../../components/ThemedButton';
@@ -52,10 +52,9 @@ export default function LoginScreen() {
   };
 
   return (
-    <ImageBackground
-      source={require('../../assets/images/image copy.png')}
+    <LinearGradient
+      colors={theme.palette.backgroundGradient}
       style={styles.container}
-      resizeMode="cover"
     >
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
@@ -117,7 +116,7 @@ export default function LoginScreen() {
           </View>
         </ScrollView>
       </KeyboardAvoidingView>
-    </ImageBackground>
+    </LinearGradient>
   );
 }
 

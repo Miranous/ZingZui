@@ -13,8 +13,8 @@ import {
   Platform,
   ScrollView,
   Pressable,
-  ImageBackground,
 } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
 import { useRouter } from 'expo-router';
 import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
 import { GlassCard } from '../../components/GlassCard';
@@ -59,10 +59,9 @@ export default function SignupScreen() {
   const isFormValid = firstName && lastName && email && password;
 
   return (
-    <ImageBackground
-      source={require('../../assets/images/image copy.png')}
+    <LinearGradient
+      colors={theme.palette.backgroundGradient}
       style={styles.container}
-      resizeMode="cover"
     >
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
@@ -167,7 +166,7 @@ export default function SignupScreen() {
           </View>
         </ScrollView>
       </KeyboardAvoidingView>
-    </ImageBackground>
+    </LinearGradient>
   );
 }
 
