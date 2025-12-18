@@ -7,7 +7,7 @@ import {
   Pressable,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import { Check, X, XCircle } from 'lucide-react-native';
+import { Check, X, Trash2 } from 'lucide-react-native';
 import { GlassCard } from './GlassCard';
 import { theme } from '../theme/theme';
 
@@ -45,22 +45,21 @@ export const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
                 onPress={onCancel}
                 style={[styles.iconButton, styles.cancelButton]}
               >
-                <X size={20} color={theme.palette.textSecondary} />
+                <X size={24} color="#666" />
               </Pressable>
 
               <Pressable
                 onPress={onNo}
                 style={[styles.iconButton, styles.noButton]}
               >
-                <XCircle size={20} color={theme.palette.danger} />
-
+                <Trash2 size={24} color="#fff" />
               </Pressable>
 
               <Pressable
                 onPress={onYes}
                 style={[styles.iconButton, styles.yesButton]}
               >
-                <Check size={20} color={theme.palette.textPrimary} />
+                <Check size={24} color="#fff" />
               </Pressable>
             </View>
           </GlassCard>
@@ -99,25 +98,23 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   iconButton: {
-    width: 30,
-    height: 30,
+    width: 56,
+    height: 56,
     borderRadius: theme.radii.button,
-    backgroundColor: theme.palette.inputBg,
-    borderWidth: 1,
-    borderColor: theme.palette.glassBorder,
     justifyContent: 'center',
     alignItems: 'center',
+    borderWidth: 2,
   },
   cancelButton: {
-    backgroundColor: theme.palette.inputBg,
-    borderColor: theme.palette.glassBorder,
+    backgroundColor: '#2a2a2a',
+    borderColor: '#444',
   },
   noButton: {
-    backgroundColor: 'rgba(255,90,95,0.2)',
-    borderColor: 'rgba(255,90,95,0.4)',
+    backgroundColor: '#dc2626',
+    borderColor: '#ef4444',
   },
   yesButton: {
-    backgroundColor: theme.palette.primaryGradient[0] + '20',
-    borderColor: theme.palette.primaryGradient[0],
+    backgroundColor: '#06b6d4',
+    borderColor: '#22d3ee',
   },
 });

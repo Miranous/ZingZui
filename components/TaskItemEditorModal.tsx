@@ -48,7 +48,7 @@ export const TaskItemEditorModal: React.FC<TaskItemEditorModalProps> = ({
   onDelete,
   onClose,
 }) => {
-  const noteColors = noteId ? getColorForNote(noteId) : { bg: theme.palette.primary, text: theme.palette.textPrimary };
+  const noteColors = noteId ? getColorForNote(noteId) : { bg: theme.palette.primaryGradient[0], text: theme.palette.textPrimary };
   const [text, setText] = useState('');
   const [completed, setCompleted] = useState(false);
   const [priority, setPriority] = useState(3);

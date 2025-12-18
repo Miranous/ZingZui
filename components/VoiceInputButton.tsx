@@ -135,7 +135,7 @@ const styles = StyleSheet.create({
   button: {
     width: 40,
     height: 40,
-    borderRadius: theme.radii.full,
+    borderRadius: 20,
     overflow: 'hidden',
     borderWidth: 1,
     borderColor: theme.palette.glassBorder,

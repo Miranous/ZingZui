@@ -13,9 +13,8 @@ import {
   Pressable,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import { AlertTriangle } from 'lucide-react-native';
+import { AlertTriangle, X, Trash2 } from 'lucide-react-native';
 import { GlassCard } from './GlassCard';
-import { ThemedButton } from './ThemedButton';
 import { theme } from '../theme/theme';
 
 interface ConfirmDeleteModalProps {
@@ -68,22 +67,23 @@ export const ConfirmDeleteModal: React.FC<ConfirmDeleteModalProps> = ({
           </Text>
 
           <View style={styles.buttons}>
-            <ThemedButton
-              title="Cancel"
+            <Pressable
               onPress={onCancel}
-              variant="secondary"
+              style={[styles.iconButton, styles.cancelButton]}
               disabled={isDeleting}
-              style={styles.button}
               accessibilityLabel="cancel-delete-button"
-            />
-            <ThemedButton
-              title="Delete"
+            >
+              <X size={24} color="#666" />
+            </Pressable>
+
+            <Pressable
               onPress={onConfirm}
-              variant="primary"
-              loading={isDeleting}
-              style={styles.button}
+              style={[styles.iconButton, styles.deleteButton]}
+              disabled={isDeleting}
               accessibilityLabel="confirm-delete-button"
-            />
+            >
+              <Trash2 size={24} color="#fff" />
+            </Pressable>
           </View>
         </GlassCard>
       </LinearGradient>
@@ -134,12 +134,22 @@ const styles = StyleSheet.create({
   buttons: {
     flexDirection: 'row',
     gap: theme.spacing.md,
-    width: '100%',
+    justifyContent: 'center',
   },
-  button: {
-    flex: 1,
+  iconButton: {
+    width: 56,
+    height: 56,
+    borderRadius: theme.radii.button,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 2,
+  },
+  cancelButton: {
+    backgroundColor: '#2a2a2a',
+    borderColor: '#444',
   },
   deleteButton: {
-    backgroundColor: theme.palette.danger,
+    backgroundColor: '#dc2626',
+    borderColor: '#ef4444',
   },
 });

@@ -56,7 +56,7 @@ export const NoteEditorModal: React.FC<NoteEditorModalProps> = ({
   const isVoiceButtonPressed = useRef(false);
 
   const isEditMode = !!note;
-  const noteColors = note?.id ? getColorForNote(note.id) : { bg: theme.palette.primary, text: theme.palette.textPrimary };
+  const noteColors = note?.id ? getColorForNote(note.id) : { bg: theme.palette.primaryGradient[0], text: theme.palette.textPrimary };
 
   useEffect(() => {
     if (visible) {
@@ -221,8 +221,8 @@ export const NoteEditorModal: React.FC<NoteEditorModalProps> = ({
 
                 <View style={styles.bodyInputContainer}>
                   <View style={styles.bodyLabelRow}>
-                    <Text style={[styles.bodyLabel, isEditMode && { color: noteColors.text, opacity: 0.8 }]}>Body</Text>
-                    <View onTouchStart={handleVoiceButtonPress} onMouseDown={handleVoiceButtonPress}>
+                    <Text style={[styles.bodyLabel, isEditMode && { color: noteColors.text, opacity: 0.8 }]}>Content</Text>
+                    <View onTouchStart={handleVoiceButtonPress}>
                       <VoiceInputButton
                         onTranscript={handleVoiceTranscript}
                         disabled={isSaving}
