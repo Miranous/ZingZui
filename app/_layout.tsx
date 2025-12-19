@@ -3,6 +3,7 @@ import { Stack, useRouter, useSegments } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { useFrameworkReady } from '@/hooks/useFrameworkReady';
 import { AuthProvider, useAuth } from '../contexts/AuthContext';
+import { SubscriptionProvider } from '../contexts/SubscriptionContext';
 import { useFonts, Caveat_700Bold } from '@expo-google-fonts/caveat';
 import * as SplashScreen from 'expo-splash-screen';
 
@@ -64,7 +65,9 @@ export default function RootLayout() {
 
   return (
     <AuthProvider>
-      <RootLayoutNav />
+      <SubscriptionProvider>
+        <RootLayoutNav />
+      </SubscriptionProvider>
     </AuthProvider>
   );
 }
