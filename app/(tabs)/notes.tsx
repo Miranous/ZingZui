@@ -153,7 +153,7 @@ export default function NotesBrowserScreen() {
     }
   };
 
-  const handleSaveNote = async (data: { title: string; body: string }) => {
+  const handleSaveNote = async (data: { title: string; body: string; color?: string }) => {
     if (editingNote) {
       const result = await update(editingNote.id, data);
       if (!result.error) {
@@ -181,6 +181,7 @@ export default function NotesBrowserScreen() {
       const result = await update(editingNote.id, {
         title: data.title,
         body: '',
+        color: data.color,
         tasks: noteTasks as any,
       });
       if (!result.error) {
@@ -192,6 +193,7 @@ export default function NotesBrowserScreen() {
         title: data.title,
         body: '',
         type: 'tasklist',
+        color: data.color,
         tasks: noteTasks as any,
       });
       if (!result.error) {

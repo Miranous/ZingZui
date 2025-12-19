@@ -24,6 +24,7 @@ import { ThemedButton } from './ThemedButton';
 import { ThemedInput } from './ThemedInput';
 import { RichTextEditor, RichTextEditorRef } from './RichTextEditor';
 import { VoiceInputButton } from './VoiceInputButton';
+import { ColorPickerButton } from './ColorPickerButton';
 import { getColorForNote } from './NoteListItem';
 import { Note } from '../lib/notes';
 import { theme } from '../theme/theme';
@@ -32,7 +33,7 @@ import { useAuth } from '../contexts/AuthContext';
 interface NoteEditorModalProps {
   visible: boolean;
   note?: Note | null;
-  onSave: (data: { title: string; body: string }) => Promise<{ error?: string }>;
+  onSave: (data: { title: string; body: string; color?: string }) => Promise<{ error?: string }>;
   onClose: () => void;
 }
 
@@ -45,27 +46,32 @@ export const NoteEditorModal: React.FC<NoteEditorModalProps> = ({
   const { user } = useAuth();
   const [title, setTitle] = useState('');
   const [body, setBody] = useState('');
+  const [color, setColor] = useState<string | undefined>(undefined);
   const [error, setError] = useState('');
   const [isSaving, setIsSaving] = useState(false);
   const editorRef = useRef<RichTextEditorRef>(null);
   const titleInputRef = useRef<TextInput>(null);
   const [originalTitle, setOriginalTitle] = useState('');
   const [originalBody, setOriginalBody] = useState('');
+  const [originalColor, setOriginalColor] = useState<string | undefined>(undefined);
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
   const [activeField, setActiveField] = useState<'title' | 'body'>('body');
   const isVoiceButtonPressed = useRef(false);
 
   const isEditMode = !!note;
-  const noteColors = note?.id ? getColorForNote(note.id) : { bg: theme.palette.primaryGradient[0], text: theme.palette.textPrimary };
+  const noteColors = note?.id ? getColorForNote(note.id, color || note.color) : { bg: theme.palette.primaryGradient[0], text: theme.palette.textPrimary };
 
   useEffect(() => {
     if (visible) {
       const initialTitle = note?.title || '';
       const initialBody = note?.body || '';
+      const initialColor = note?.color;
       setTitle(initialTitle);
       setBody(initialBody);
+      setColor(initialColor);
       setOriginalTitle(initialTitle);
       setOriginalBody(initialBody);
+      setOriginalColor(initialColor);
       setError('');
     }
   }, [visible, note]);
@@ -80,7 +86,7 @@ export const NoteEditorModal: React.FC<NoteEditorModalProps> = ({
 
     setIsSaving(true);
 
-    const result = await onSave({ title, body });
+    const result = await onSave({ title, body, color });
 
     setIsSaving(false);
 
@@ -94,7 +100,7 @@ export const NoteEditorModal: React.FC<NoteEditorModalProps> = ({
   };
 
   const hasChanges = () => {
-    return title !== originalTitle || body !== originalBody;
+    return title !== originalTitle || body !== originalBody || color !== originalColor;
   };
 
   const handleClose = () => {
@@ -222,11 +228,18 @@ export const NoteEditorModal: React.FC<NoteEditorModalProps> = ({
                 <View style={styles.bodyInputContainer}>
                   <View style={styles.bodyLabelRow}>
                     <Text style={[styles.bodyLabel, isEditMode && { color: noteColors.text, opacity: 0.8 }]}>Content</Text>
-                    <View onTouchStart={handleVoiceButtonPress}>
-                      <VoiceInputButton
-                        onTranscript={handleVoiceTranscript}
+                    <View style={styles.buttonRow}>
+                      <ColorPickerButton
+                        selectedColor={color}
+                        onColorSelect={setColor}
                         disabled={isSaving}
                       />
+                      <View onTouchStart={handleVoiceButtonPress}>
+                        <VoiceInputButton
+                          onTranscript={handleVoiceTranscript}
+                          disabled={isSaving}
+                        />
+                      </View>
                     </View>
                   </View>
                   <View style={styles.bodyInputWrapper}>
@@ -395,6 +408,11 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     marginBottom: theme.spacing.sm,
+  },
+  buttonRow: {
+    flexDirection: 'row',
+    gap: theme.spacing.sm,
+    alignItems: 'center',
   },
   titleInput: {
     marginBottom: 0,

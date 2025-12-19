@@ -21,6 +21,7 @@ import { X, Check, Plus, Trash2, Square, CheckSquare, ChevronUp, ChevronDown, Ed
 import { GlassCard } from './GlassCard';
 import { ConfirmDialog } from './ConfirmDialog';
 import { TaskItemEditorModal, TaskItemData } from './TaskItemEditorModal';
+import { ColorPickerButton } from './ColorPickerButton';
 import { getColorForNote } from './NoteListItem';
 import { theme } from '../theme/theme';
 
@@ -36,6 +37,7 @@ export interface TaskListData {
   id?: string;
   title: string;
   tasks: Task[];
+  color?: string;
 }
 
 interface TaskListEditorModalProps {
@@ -53,10 +55,12 @@ export const TaskListEditorModal: React.FC<TaskListEditorModalProps> = ({
 }) => {
   const [title, setTitle] = useState('');
   const [tasks, setTasks] = useState<Task[]>([]);
+  const [color, setColor] = useState<string | undefined>(undefined);
   const [error, setError] = useState('');
   const [isSaving, setIsSaving] = useState(false);
   const [originalTitle, setOriginalTitle] = useState('');
   const [originalTasks, setOriginalTasks] = useState<Task[]>([]);
+  const [originalColor, setOriginalColor] = useState<string | undefined>(undefined);
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
   const [editingTaskId, setEditingTaskId] = useState<string | null>(null);
   const [selectedTaskId, setSelectedTaskId] = useState<string | null>(null);
@@ -65,16 +69,19 @@ export const TaskListEditorModal: React.FC<TaskListEditorModalProps> = ({
   const taskInputRefs = useRef<{ [key: string]: TextInput }>({});
 
   const isEditMode = !!taskList;
-  const noteColors = taskList?.id ? getColorForNote(taskList.id) : { bg: theme.palette.primaryGradient[0], text: theme.palette.textPrimary };
+  const noteColors = taskList?.id ? getColorForNote(taskList.id, color || taskList.color) : { bg: theme.palette.primaryGradient[0], text: theme.palette.textPrimary };
 
   useEffect(() => {
     if (visible) {
       const initialTitle = taskList?.title || '';
       const initialTasks = (taskList?.tasks || []).sort((a, b) => a.priority - b.priority);
+      const initialColor = taskList?.color;
       setTitle(initialTitle);
       setTasks(initialTasks);
+      setColor(initialColor);
       setOriginalTitle(initialTitle);
       setOriginalTasks(initialTasks);
+      setOriginalColor(initialColor);
       setError('');
       setEditingTaskId(null);
       setSelectedTaskId(null);
@@ -91,7 +98,7 @@ export const TaskListEditorModal: React.FC<TaskListEditorModalProps> = ({
 
     setIsSaving(true);
 
-    const result = await onSave({ title, tasks });
+    const result = await onSave({ title, tasks, color });
 
     setIsSaving(false);
 
@@ -106,6 +113,7 @@ export const TaskListEditorModal: React.FC<TaskListEditorModalProps> = ({
 
   const hasChanges = () => {
     if (title !== originalTitle) return true;
+    if (color !== originalColor) return true;
     if (tasks.length !== originalTasks.length) return true;
     return tasks.some((task, index) => {
       const original = originalTasks[index];
@@ -279,7 +287,14 @@ export const TaskListEditorModal: React.FC<TaskListEditorModalProps> = ({
                 </View>
 
                 <View style={styles.tasksContainer}>
-                  <Text style={[styles.tasksLabel, isEditMode && { color: noteColors.text, opacity: 0.8 }]}>Tasks</Text>
+                  <View style={styles.tasksHeaderRow}>
+                    <Text style={[styles.tasksLabel, isEditMode && { color: noteColors.text, opacity: 0.8 }]}>Tasks</Text>
+                    <ColorPickerButton
+                      selectedColor={color}
+                      onColorSelect={setColor}
+                      disabled={isSaving}
+                    />
+                  </View>
                 <ScrollView style={styles.tasksList}>
                   {tasks.map((task) => (
                     <Pressable
@@ -424,6 +439,7 @@ export const TaskListEditorModal: React.FC<TaskListEditorModalProps> = ({
         visible={isTaskItemEditorVisible}
         task={tasks.find(t => t.id === selectedTaskId) || null}
         noteId={taskList?.id}
+        noteColor={color || taskList?.color}
         onSave={handleSaveTaskItem}
         onDelete={handleDeleteTaskItem}
         onClose={() => setIsTaskItemEditorVisible(false)}
@@ -514,6 +530,11 @@ const styles = StyleSheet.create({
   tasksLabel: {
     ...theme.typography.bodySmall,
     color: theme.palette.textSecondary,
+  },
+  tasksHeaderRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
     marginBottom: theme.spacing.sm,
   },
   tasksList: {

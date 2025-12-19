@@ -22,6 +22,7 @@ export interface Note {
   title: string;
   body: string;
   type: 'note' | 'tasklist';
+  color?: string;
   createdAt: string;
   updatedAt: string;
   tasks?: Task[];
@@ -32,12 +33,14 @@ export interface CreateNoteData {
   body: string;
   ownerId: string;
   type?: 'note' | 'tasklist';
+  color?: string;
   tasks?: Omit<Task, 'id' | 'noteId' | 'createdAt'>[];
 }
 
 export interface UpdateNoteData {
   title: string;
   body: string;
+  color?: string;
   tasks?: Task[];
 }
 
@@ -89,6 +92,7 @@ export async function getNotes(
       title: note.title,
       body: note.body,
       type: note.type || 'note',
+      color: note.color,
       createdAt: note.created_at,
       updatedAt: note.updated_at,
     }));
@@ -151,6 +155,7 @@ export async function createNote(
         title: data.title.trim(),
         body: data.body.trim(),
         type: data.type || 'note',
+        color: data.color || null,
       })
       .select()
       .single();
@@ -166,6 +171,7 @@ export async function createNote(
       title: newNote.title,
       body: newNote.body,
       type: newNote.type,
+      color: newNote.color,
       createdAt: newNote.created_at,
       updatedAt: newNote.updated_at,
     };
@@ -219,12 +225,18 @@ export async function updateNote(
       return { error: 'Title is required' };
     }
 
+    const updateData: any = {
+      title: data.title.trim(),
+      body: data.body.trim(),
+    };
+
+    if (data.color !== undefined) {
+      updateData.color = data.color;
+    }
+
     const { data: updatedNote, error } = await supabase
       .from('notes')
-      .update({
-        title: data.title.trim(),
-        body: data.body.trim(),
-      })
+      .update(updateData)
       .eq('id', id)
       .eq('owner_id', ownerId)
       .select()
@@ -245,6 +257,7 @@ export async function updateNote(
       title: updatedNote.title,
       body: updatedNote.body,
       type: updatedNote.type,
+      color: updatedNote.color,
       createdAt: updatedNote.created_at,
       updatedAt: updatedNote.updated_at,
     };

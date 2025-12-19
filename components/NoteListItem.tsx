@@ -37,7 +37,14 @@ export const PAINT_SPLASH_COLORS = [
   { bg: '#F15BB5', text: '#FFFFFF' },  // Magenta
 ];
 
-export const getColorForNote = (noteId: string): { bg: string; text: string } => {
+export const getColorForNote = (noteId: string, storedColor?: string): { bg: string; text: string } => {
+  if (storedColor) {
+    const colorObj = PAINT_SPLASH_COLORS.find(c => c.bg === storedColor);
+    if (colorObj) {
+      return colorObj;
+    }
+  }
+
   let hash = 0;
   for (let i = 0; i < noteId.length; i++) {
     hash = noteId.charCodeAt(i) + ((hash << 5) - hash);
@@ -54,7 +61,7 @@ export const NoteListItem: React.FC<NoteListItemProps> = ({
   showPreview = false,
 }) => {
   const scale = useSharedValue(1);
-  const noteColors = getColorForNote(note.id);
+  const noteColors = getColorForNote(note.id, note.color);
   const lastPressTime = React.useRef<number>(0);
   const DOUBLE_PRESS_DELAY = 300; // milliseconds
 

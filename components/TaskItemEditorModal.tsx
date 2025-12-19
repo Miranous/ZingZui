@@ -35,6 +35,7 @@ interface TaskItemEditorModalProps {
   visible: boolean;
   task: TaskItemData | null;
   noteId?: string;
+  noteColor?: string;
   onSave: (task: TaskItemData) => void;
   onDelete: (taskId: string) => void;
   onClose: () => void;
@@ -44,11 +45,12 @@ export const TaskItemEditorModal: React.FC<TaskItemEditorModalProps> = ({
   visible,
   task,
   noteId,
+  noteColor,
   onSave,
   onDelete,
   onClose,
 }) => {
-  const noteColors = noteId ? getColorForNote(noteId) : { bg: theme.palette.primaryGradient[0], text: theme.palette.textPrimary };
+  const noteColors = noteId ? getColorForNote(noteId, noteColor) : { bg: theme.palette.primaryGradient[0], text: theme.palette.textPrimary };
   const [text, setText] = useState('');
   const [completed, setCompleted] = useState(false);
   const [priority, setPriority] = useState(3);
