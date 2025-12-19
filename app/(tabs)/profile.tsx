@@ -108,7 +108,7 @@ export default function ProfileScreen() {
           requiredTier="premium"
         />
         <View style={styles.footer}>
-          <Text style={styles.version}>ZingZui Version (Release 1.0.0)</Text>
+          <Text style={styles.version}>ZingZui Version 1.0.0</Text>
           <Text style={styles.supportLabel}>Support: Enquiries@Dalatek.com</Text>
           <Text style={styles.copyright}>
             Copyright © Dalatek LLC All rights reserved.
