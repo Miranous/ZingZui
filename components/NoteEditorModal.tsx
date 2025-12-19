@@ -188,10 +188,10 @@ export const NoteEditorModal: React.FC<NoteEditorModalProps> = ({
             contentContainerStyle={styles.scrollContent}
             keyboardShouldPersistTaps="handled"
           >
-            <View style={[styles.card, isEditMode && { backgroundColor: noteColors.bg }]}>
+            <View style={[styles.card, (isEditMode || color) && { backgroundColor: noteColors.bg }]}>
               <View style={styles.cardInner}>
                 <View style={styles.header}>
-                  <Text style={[styles.headerTitle, isEditMode && { color: noteColors.text }]}>
+                  <Text style={[styles.headerTitle, (isEditMode || color) && { color: noteColors.text }]}>
                     {isEditMode ? 'Edit Note' : 'New Note'}
                   </Text>
                   <Pressable
@@ -201,7 +201,7 @@ export const NoteEditorModal: React.FC<NoteEditorModalProps> = ({
                     accessibilityLabel="close-button"
                     accessibilityRole="button"
                   >
-                    <X size={24} color={isEditMode ? noteColors.text : theme.palette.textPrimary} />
+                    <X size={24} color={(isEditMode || color) ? noteColors.text : theme.palette.textPrimary} />
                   </Pressable>
                 </View>
 
@@ -212,7 +212,7 @@ export const NoteEditorModal: React.FC<NoteEditorModalProps> = ({
               ) : null}
 
                 <View style={styles.titleInputContainer}>
-                  <Text style={[styles.titleLabel, isEditMode && { color: noteColors.text, opacity: 0.8 }]}>Title</Text>
+                  <Text style={[styles.titleLabel, (isEditMode || color) && { color: noteColors.text, opacity: 0.8 }]}>Title</Text>
                   <View
                     style={[
                       styles.titleInputWrapper,
@@ -224,9 +224,9 @@ export const NoteEditorModal: React.FC<NoteEditorModalProps> = ({
                       value={title}
                       onChangeText={setTitle}
                       placeholder="Enter note title"
-                      placeholderTextColor={isEditMode ? noteColors.text + '80' : theme.palette.textTertiary}
+                      placeholderTextColor={(isEditMode || color) ? noteColors.text + '80' : theme.palette.textTertiary}
                       autoFocus
-                      style={[styles.titleTextInput, isEditMode && { color: noteColors.text }]}
+                      style={[styles.titleTextInput, (isEditMode || color) && { color: noteColors.text }]}
                       accessibilityLabel="note-title-input"
                       onFocus={() => setActiveField('title')}
                       onBlur={handleTitleBlur}
@@ -236,7 +236,7 @@ export const NoteEditorModal: React.FC<NoteEditorModalProps> = ({
 
                 <View style={styles.bodyInputContainer}>
                   <View style={styles.bodyLabelRow}>
-                    <Text style={[styles.bodyLabel, isEditMode && { color: noteColors.text, opacity: 0.8 }]}>Content</Text>
+                    <Text style={[styles.bodyLabel, (isEditMode || color) && { color: noteColors.text, opacity: 0.8 }]}>Content</Text>
                     <View style={styles.buttonRow}>
                       <ColorPickerButton
                         selectedColor={color}
@@ -261,8 +261,8 @@ export const NoteEditorModal: React.FC<NoteEditorModalProps> = ({
                         userId={user.id}
                         onFocus={() => setActiveField('body')}
                         onBlur={handleBodyBlur}
-                        textColor={isEditMode ? noteColors.text : undefined}
-                        placeholderColor={isEditMode ? noteColors.text + '80' : undefined}
+                        textColor={(isEditMode || color) ? noteColors.text : undefined}
+                        placeholderColor={(isEditMode || color) ? noteColors.text + '80' : undefined}
                       />
                     )}
                   </View>

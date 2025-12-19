@@ -256,10 +256,10 @@ export const TaskListEditorModal: React.FC<TaskListEditorModalProps> = ({
             contentContainerStyle={styles.scrollContent}
             keyboardShouldPersistTaps="handled"
           >
-            <View style={[styles.card, isEditMode && { backgroundColor: noteColors.bg }]}>
+            <View style={[styles.card, (isEditMode || color) && { backgroundColor: noteColors.bg }]}>
               <View style={styles.cardInner}>
                 <View style={styles.header}>
-                  <Text style={[styles.headerTitle, isEditMode && { color: noteColors.text }]}>
+                  <Text style={[styles.headerTitle, (isEditMode || color) && { color: noteColors.text }]}>
                     {isEditMode ? 'Edit Tasklist' : 'New Tasklist'}
                   </Text>
                   <Pressable
@@ -269,7 +269,7 @@ export const TaskListEditorModal: React.FC<TaskListEditorModalProps> = ({
                     accessibilityLabel="close-button"
                     accessibilityRole="button"
                   >
-                    <X size={24} color={isEditMode ? noteColors.text : theme.palette.textPrimary} />
+                    <X size={24} color={(isEditMode || color) ? noteColors.text : theme.palette.textPrimary} />
                   </Pressable>
                 </View>
 
@@ -280,16 +280,16 @@ export const TaskListEditorModal: React.FC<TaskListEditorModalProps> = ({
               ) : null}
 
                 <View style={styles.titleInputContainer}>
-                  <Text style={[styles.titleLabel, isEditMode && { color: noteColors.text, opacity: 0.8 }]}>Title</Text>
+                  <Text style={[styles.titleLabel, (isEditMode || color) && { color: noteColors.text, opacity: 0.8 }]}>Title</Text>
                   <View style={[styles.titleInputWrapper, styles.inputContainerBase]}>
                     <TextInput
                       ref={titleInputRef}
                       value={title}
                       onChangeText={setTitle}
                       placeholder="Enter tasklist title"
-                      placeholderTextColor={isEditMode ? noteColors.text + '80' : theme.palette.textTertiary}
+                      placeholderTextColor={(isEditMode || color) ? noteColors.text + '80' : theme.palette.textTertiary}
                       autoFocus
-                      style={[styles.titleTextInput, isEditMode && { color: noteColors.text }]}
+                      style={[styles.titleTextInput, (isEditMode || color) && { color: noteColors.text }]}
                       accessibilityLabel="tasklist-title-input"
                     />
                   </View>
@@ -297,7 +297,7 @@ export const TaskListEditorModal: React.FC<TaskListEditorModalProps> = ({
 
                 <View style={styles.tasksContainer}>
                   <View style={styles.tasksHeaderRow}>
-                    <Text style={[styles.tasksLabel, isEditMode && { color: noteColors.text, opacity: 0.8 }]}>Tasks</Text>
+                    <Text style={[styles.tasksLabel, (isEditMode || color) && { color: noteColors.text, opacity: 0.8 }]}>Tasks</Text>
                     <ColorPickerButton
                       selectedColor={color}
                       onColorSelect={setColor}
@@ -322,9 +322,9 @@ export const TaskListEditorModal: React.FC<TaskListEditorModalProps> = ({
                         accessibilityRole="checkbox"
                       >
                         {task.completed ? (
-                          <CheckSquare size={20} color={isEditMode ? noteColors.text : theme.palette.primaryGradient[0]} />
+                          <CheckSquare size={20} color={(isEditMode || color) ? noteColors.text : theme.palette.primaryGradient[0]} />
                         ) : (
-                          <Square size={20} color={isEditMode ? noteColors.text + '80' : theme.palette.textSecondary} />
+                          <Square size={20} color={(isEditMode || color) ? noteColors.text + '80' : theme.palette.textSecondary} />
                         )}
                       </Pressable>
                       <View style={styles.priorityControls}>
@@ -334,16 +334,16 @@ export const TaskListEditorModal: React.FC<TaskListEditorModalProps> = ({
                           style={[styles.priorityButton, task.priority === 1 && styles.priorityButtonDisabled]}
                           accessibilityLabel={`increase-priority-${task.id}`}
                         >
-                          <ChevronUp size={12} color={task.priority === 1 ? theme.palette.disabled : (isEditMode ? noteColors.text + '80' : theme.palette.textSecondary)} />
+                          <ChevronUp size={12} color={task.priority === 1 ? theme.palette.disabled : ((isEditMode || color) ? noteColors.text + '80' : theme.palette.textSecondary)} />
                         </Pressable>
-                        <Text style={[styles.priorityText, isEditMode && { color: noteColors.text }]}>{task.priority}</Text>
+                        <Text style={[styles.priorityText, (isEditMode || color) && { color: noteColors.text }]}>{task.priority}</Text>
                         <Pressable
                           onPress={() => handleDecreasePriority(task.id)}
                           disabled={task.priority === 5}
                           style={[styles.priorityButton, task.priority === 5 && styles.priorityButtonDisabled]}
                           accessibilityLabel={`decrease-priority-${task.id}`}
                         >
-                          <ChevronDown size={12} color={task.priority === 5 ? theme.palette.disabled : (isEditMode ? noteColors.text + '80' : theme.palette.textSecondary)} />
+                          <ChevronDown size={12} color={task.priority === 5 ? theme.palette.disabled : ((isEditMode || color) ? noteColors.text + '80' : theme.palette.textSecondary)} />
                         </Pressable>
                       </View>
                       <TextInput
@@ -355,11 +355,11 @@ export const TaskListEditorModal: React.FC<TaskListEditorModalProps> = ({
                         value={task.text}
                         onChangeText={(text) => handleTaskTextChange(task.id, text)}
                         placeholder="Task description"
-                        placeholderTextColor={isEditMode ? noteColors.text + '80' : theme.palette.textTertiary}
+                        placeholderTextColor={(isEditMode || color) ? noteColors.text + '80' : theme.palette.textTertiary}
                         style={[
                           styles.taskInput,
                           task.completed && styles.taskInputCompleted,
-                          isEditMode && { color: noteColors.text },
+                          (isEditMode || color) && { color: noteColors.text },
                         ]}
                         onFocus={() => handleTaskFocus(task.id)}
                         onBlur={handleTaskBlur}
@@ -372,7 +372,7 @@ export const TaskListEditorModal: React.FC<TaskListEditorModalProps> = ({
                           accessibilityLabel={`delete-task-${task.id}`}
                           accessibilityRole="button"
                         >
-                          <Trash2 size={16} color={isEditMode ? noteColors.text : theme.palette.danger} />
+                          <Trash2 size={16} color={(isEditMode || color) ? noteColors.text : theme.palette.danger} />
                         </Pressable>
                       )}
                     </Pressable>
