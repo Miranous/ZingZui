@@ -46,9 +46,10 @@ export const VoiceInputButton: React.FC<VoiceInputButtonProps> = ({
       };
 
       recognition.onresult = (event: any) => {
-        for (let i = resultIndexRef.current; i < event.results.length; i++) {
+        const startIndex = event.resultIndex || 0;
+        for (let i = startIndex; i < event.results.length; i++) {
           const result = event.results[i];
-          if (result.isFinal) {
+          if (result.isFinal && i >= resultIndexRef.current) {
             const transcript = result[0].transcript;
             if (transcript.trim()) {
               onTranscriptRef.current(transcript + ' ');
@@ -97,6 +98,7 @@ export const VoiceInputButton: React.FC<VoiceInputButtonProps> = ({
           }, 100);
         } else {
           setIsRecording(false);
+          resultIndexRef.current = 0;
         }
       };
 
