@@ -18,6 +18,7 @@ export const VoiceInputButton: React.FC<VoiceInputButtonProps> = ({
   const [error, setError] = useState<string | null>(null);
   const recognitionRef = useRef<any>(null);
   const shouldContinueRef = useRef(false);
+  const resultIndexRef = useRef(0);
 
   useEffect(() => {
     if (Platform.OS === 'web') {
@@ -31,16 +32,24 @@ export const VoiceInputButton: React.FC<VoiceInputButtonProps> = ({
 
       const recognition = new SpeechRecognition();
       recognition.continuous = true;
-      recognition.interimResults = false;
+      recognition.interimResults = true;
       recognition.lang = 'en-US';
+      recognition.maxAlternatives = 1;
+
+      recognition.onstart = () => {
+        console.log('Speech recognition started');
+      };
 
       recognition.onresult = (event: any) => {
-        const transcript = Array.from(event.results)
-          .map((result: any) => result[0].transcript)
-          .join(' ');
-
-        if (transcript) {
-          onTranscript(transcript + ' ');
+        for (let i = resultIndexRef.current; i < event.results.length; i++) {
+          const result = event.results[i];
+          if (result.isFinal) {
+            const transcript = result[0].transcript;
+            if (transcript.trim()) {
+              onTranscript(transcript + ' ');
+            }
+            resultIndexRef.current = i + 1;
+          }
         }
       };
 
@@ -63,14 +72,21 @@ export const VoiceInputButton: React.FC<VoiceInputButtonProps> = ({
       };
 
       recognition.onend = () => {
+        console.log('Speech recognition ended, shouldContinue:', shouldContinueRef.current);
         if (shouldContinueRef.current) {
-          try {
-            recognition.start();
-          } catch (e) {
-            console.error('Failed to restart recognition:', e);
-            setIsRecording(false);
-            shouldContinueRef.current = false;
-          }
+          setTimeout(() => {
+            if (shouldContinueRef.current) {
+              try {
+                console.log('Restarting speech recognition...');
+                resultIndexRef.current = 0;
+                recognition.start();
+              } catch (e) {
+                console.error('Failed to restart recognition:', e);
+                setIsRecording(false);
+                shouldContinueRef.current = false;
+              }
+            }
+          }, 100);
         } else {
           setIsRecording(false);
         }
@@ -101,6 +117,7 @@ export const VoiceInputButton: React.FC<VoiceInputButtonProps> = ({
       setIsRecording(false);
     } else {
       try {
+        resultIndexRef.current = 0;
         shouldContinueRef.current = true;
         recognitionRef.current.start();
         setIsRecording(true);
