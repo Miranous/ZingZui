@@ -19,6 +19,11 @@ export const VoiceInputButton: React.FC<VoiceInputButtonProps> = ({
   const recognitionRef = useRef<any>(null);
   const shouldContinueRef = useRef(false);
   const resultIndexRef = useRef(0);
+  const onTranscriptRef = useRef(onTranscript);
+
+  useEffect(() => {
+    onTranscriptRef.current = onTranscript;
+  }, [onTranscript]);
 
   useEffect(() => {
     if (Platform.OS === 'web') {
@@ -46,7 +51,7 @@ export const VoiceInputButton: React.FC<VoiceInputButtonProps> = ({
           if (result.isFinal) {
             const transcript = result[0].transcript;
             if (transcript.trim()) {
-              onTranscript(transcript + ' ');
+              onTranscriptRef.current(transcript + ' ');
             }
             resultIndexRef.current = i + 1;
           }
@@ -107,7 +112,7 @@ export const VoiceInputButton: React.FC<VoiceInputButtonProps> = ({
         }
       }
     };
-  }, [onTranscript]);
+  }, []);
 
   const toggleRecording = () => {
     if (!recognitionRef.current || disabled) return;
