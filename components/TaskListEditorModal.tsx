@@ -69,7 +69,16 @@ export const TaskListEditorModal: React.FC<TaskListEditorModalProps> = ({
   const taskInputRefs = useRef<{ [key: string]: TextInput }>({});
 
   const isEditMode = !!taskList;
-  const noteColors = taskList?.id ? getColorForNote(taskList.id, color || taskList.color) : { bg: theme.palette.primaryGradient[0], text: theme.palette.textPrimary };
+  const noteColors = React.useMemo(() => {
+    if (color) {
+      const colorObj = { bg: color, text: color === '#FFD60A' || color === '#FF9F1C' ? '#1A1423' : '#FFFFFF' };
+      return colorObj;
+    }
+    if (taskList?.id) {
+      return getColorForNote(taskList.id, taskList.color);
+    }
+    return { bg: theme.palette.primaryGradient[0], text: theme.palette.textPrimary };
+  }, [color, taskList?.id, taskList?.color]);
 
   useEffect(() => {
     if (visible) {

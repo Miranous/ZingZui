@@ -59,7 +59,16 @@ export const NoteEditorModal: React.FC<NoteEditorModalProps> = ({
   const isVoiceButtonPressed = useRef(false);
 
   const isEditMode = !!note;
-  const noteColors = note?.id ? getColorForNote(note.id, color || note.color) : { bg: theme.palette.primaryGradient[0], text: theme.palette.textPrimary };
+  const noteColors = React.useMemo(() => {
+    if (color) {
+      const colorObj = { bg: color, text: color === '#FFD60A' || color === '#FF9F1C' ? '#1A1423' : '#FFFFFF' };
+      return colorObj;
+    }
+    if (note?.id) {
+      return getColorForNote(note.id, note.color);
+    }
+    return { bg: theme.palette.primaryGradient[0], text: theme.palette.textPrimary };
+  }, [color, note?.id, note?.color]);
 
   useEffect(() => {
     if (visible) {
