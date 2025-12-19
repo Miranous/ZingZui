@@ -57,18 +57,21 @@ export const VoiceInputButton: React.FC<VoiceInputButtonProps> = ({
         console.error('Speech recognition error:', event.error);
 
         if (event.error === 'no-speech') {
-          setError('No speech detected. Please try again.');
+          console.log('No speech detected, will continue listening...');
         } else if (event.error === 'not-allowed') {
           setError('Microphone access denied.');
           setIsSupported(false);
+          shouldContinueRef.current = false;
+          setIsRecording(false);
+        } else if (event.error === 'aborted') {
+          console.log('Recognition aborted');
         } else if (event.error === 'network') {
           setError('Network error. Please check your connection.');
+          shouldContinueRef.current = false;
+          setIsRecording(false);
         } else {
-          setError('Speech recognition error. Please try again.');
+          console.log('Speech recognition error, will continue:', event.error);
         }
-
-        shouldContinueRef.current = false;
-        setIsRecording(false);
       };
 
       recognition.onend = () => {
