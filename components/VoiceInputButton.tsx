@@ -17,6 +17,7 @@ export const VoiceInputButton: React.FC<VoiceInputButtonProps> = ({
   const [isSupported, setIsSupported] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const recognitionRef = useRef<any>(null);
+  const shouldContinueRef = useRef(false);
 
   useEffect(() => {
     if (Platform.OS === 'web') {
@@ -57,11 +58,22 @@ export const VoiceInputButton: React.FC<VoiceInputButtonProps> = ({
           setError('Speech recognition error. Please try again.');
         }
 
+        shouldContinueRef.current = false;
         setIsRecording(false);
       };
 
       recognition.onend = () => {
-        setIsRecording(false);
+        if (shouldContinueRef.current) {
+          try {
+            recognition.start();
+          } catch (e) {
+            console.error('Failed to restart recognition:', e);
+            setIsRecording(false);
+            shouldContinueRef.current = false;
+          }
+        } else {
+          setIsRecording(false);
+        }
       };
 
       recognitionRef.current = recognition;
@@ -69,6 +81,7 @@ export const VoiceInputButton: React.FC<VoiceInputButtonProps> = ({
 
     return () => {
       if (recognitionRef.current) {
+        shouldContinueRef.current = false;
         try {
           recognitionRef.current.stop();
         } catch (e) {
@@ -83,10 +96,12 @@ export const VoiceInputButton: React.FC<VoiceInputButtonProps> = ({
     setError(null);
 
     if (isRecording) {
+      shouldContinueRef.current = false;
       recognitionRef.current.stop();
       setIsRecording(false);
     } else {
       try {
+        shouldContinueRef.current = true;
         recognitionRef.current.start();
         setIsRecording(true);
       } catch (e) {
