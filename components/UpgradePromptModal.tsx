@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import { BlurView } from 'expo-blur';
 import { X, Crown, Check } from 'lucide-react-native';
-import { THEME } from '@/theme/theme';
+import { theme } from '@/theme/theme';
 import { SubscriptionTier, TIER_NAMES, TIER_PRICES, TIER_LIMITS } from '@/lib/subscription';
 
 interface UpgradePromptModalProps {
@@ -55,12 +55,12 @@ export function UpgradePromptModal({
         <View style={styles.modalContainer}>
           <View style={styles.modal}>
             <TouchableOpacity style={styles.closeButton} onPress={onClose}>
-              <X size={24} color={THEME.colors.text.primary} />
+              <X size={24} color={theme.palette.textPrimary} />
             </TouchableOpacity>
 
             <View style={styles.header}>
               <View style={styles.iconContainer}>
-                <Crown size={40} color={THEME.colors.accent} />
+                <Crown size={40} color={theme.palette.primaryGradient[0]} />
               </View>
               <Text style={styles.title}>Upgrade to {tierName}</Text>
               <Text style={styles.subtitle}>
@@ -73,7 +73,7 @@ export function UpgradePromptModal({
                 <Text style={styles.featuresTitle}>Included Features:</Text>
                 {features.map((feat, index) => (
                   <View key={index} style={styles.featureItem}>
-                    <Check size={20} color={THEME.colors.accent} />
+                    <Check size={20} color={theme.palette.primaryGradient[0]} />
                     <Text style={styles.featureText}>{feat}</Text>
                   </View>
                 ))}
@@ -131,10 +131,10 @@ const styles = StyleSheet.create({
     maxHeight: '80%',
   },
   modal: {
-    backgroundColor: THEME.colors.background.tertiary,
-    borderRadius: THEME.borderRadius.xl,
+    backgroundColor: theme.palette.glassBg,
+    borderRadius: theme.radii.large,
     borderWidth: 1,
-    borderColor: THEME.colors.border.primary,
+    borderColor: theme.palette.glassBorder,
     overflow: 'hidden',
   },
   closeButton: {
@@ -149,13 +149,13 @@ const styles = StyleSheet.create({
     padding: 24,
     paddingTop: 32,
     borderBottomWidth: 1,
-    borderBottomColor: THEME.colors.border.primary,
+    borderBottomColor: theme.palette.glassBorder,
   },
   iconContainer: {
     width: 80,
     height: 80,
     borderRadius: 40,
-    backgroundColor: THEME.colors.background.secondary,
+    backgroundColor: theme.palette.inputBg,
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 16,
@@ -163,12 +163,12 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 24,
     fontWeight: '700',
-    color: THEME.colors.text.primary,
+    color: theme.palette.textPrimary,
     marginBottom: 8,
   },
   subtitle: {
     fontSize: 16,
-    color: THEME.colors.text.secondary,
+    color: theme.palette.textSecondary,
     textAlign: 'center',
   },
   content: {
@@ -180,7 +180,7 @@ const styles = StyleSheet.create({
   featuresTitle: {
     fontSize: 18,
     fontWeight: '600',
-    color: THEME.colors.text.primary,
+    color: theme.palette.textPrimary,
     marginBottom: 16,
   },
   featureItem: {
@@ -191,7 +191,7 @@ const styles = StyleSheet.create({
   },
   featureText: {
     fontSize: 16,
-    color: THEME.colors.text.primary,
+    color: theme.palette.textPrimary,
     flex: 1,
   },
   pricingContainer: {
@@ -201,43 +201,43 @@ const styles = StyleSheet.create({
   priceOption: {
     flex: 1,
     padding: 20,
-    backgroundColor: THEME.colors.background.secondary,
-    borderRadius: THEME.borderRadius.lg,
+    backgroundColor: theme.palette.inputBg,
+    borderRadius: theme.radii.card,
     borderWidth: 2,
-    borderColor: THEME.colors.border.primary,
+    borderColor: theme.palette.glassBorder,
     alignItems: 'center',
   },
   priceOptionRecommended: {
-    borderColor: THEME.colors.accent,
-    backgroundColor: THEME.colors.background.primary,
+    borderColor: theme.palette.primaryGradient[0],
+    backgroundColor: theme.palette.surfaceTint,
   },
   recommendedBadge: {
     position: 'absolute',
     top: -12,
-    backgroundColor: THEME.colors.accent,
+    backgroundColor: theme.palette.primaryGradient[0],
     paddingHorizontal: 12,
     paddingVertical: 4,
-    borderRadius: THEME.borderRadius.md,
+    borderRadius: theme.radii.input,
   },
   recommendedText: {
     fontSize: 12,
     fontWeight: '600',
-    color: THEME.colors.background.primary,
+    color: theme.palette.textPrimary,
   },
   priceLabel: {
     fontSize: 14,
-    color: THEME.colors.text.secondary,
+    color: theme.palette.textSecondary,
     marginBottom: 8,
   },
   priceValue: {
     fontSize: 28,
     fontWeight: '700',
-    color: THEME.colors.text.primary,
+    color: theme.palette.textPrimary,
     marginBottom: 4,
   },
   priceSubtext: {
     fontSize: 12,
-    color: THEME.colors.text.secondary,
+    color: theme.palette.textSecondary,
   },
   footer: {
     padding: 24,
@@ -245,13 +245,13 @@ const styles = StyleSheet.create({
     gap: 12,
   },
   upgradeButton: {
-    backgroundColor: THEME.colors.accent,
+    backgroundColor: theme.palette.primaryGradient[0],
     paddingVertical: 16,
-    borderRadius: THEME.borderRadius.lg,
+    borderRadius: theme.radii.card,
     alignItems: 'center',
   },
   upgradeButtonText: {
-    color: THEME.colors.background.primary,
+    color: theme.palette.textPrimary,
     fontSize: 18,
     fontWeight: '600',
   },
@@ -260,7 +260,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   cancelButtonText: {
-    color: THEME.colors.text.secondary,
+    color: theme.palette.textSecondary,
     fontSize: 16,
   },
 });

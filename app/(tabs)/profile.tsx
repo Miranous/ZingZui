@@ -158,7 +158,7 @@ const styles = StyleSheet.create({
     gap: theme.spacing.sm,
   },
   tierText: {
-    ...theme.typography.subheadline,
+    ...theme.typography.title,
     color: theme.palette.textSecondary,
   },
   tierTextPremium: {

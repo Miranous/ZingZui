@@ -24,7 +24,10 @@ import { NoteEditorModal } from '../../components/NoteEditorModal';
 import { TaskListEditorModal, TaskListData } from '../../components/TaskListEditorModal';
 import { ConfirmDeleteModal } from '../../components/ConfirmDeleteModal';
 import { SearchModal } from '../../components/SearchModal';
+import { UpgradePromptModal } from '../../components/UpgradePromptModal';
 import { useNotes } from '../../hooks/useNotes';
+import { useSubscription } from '../../contexts/SubscriptionContext';
+import { canCreateNote } from '../../lib/subscription';
 import { Note } from '../../lib/notes';
 import { theme } from '../../theme/theme';
 
@@ -37,6 +40,8 @@ export default function NotesBrowserScreen() {
   const [showPreview, setShowPreview] = useState(false);
   const [sortMode, setSortMode] = useState<SortMode>('updated');
   const [hoveredButton, setHoveredButton] = useState<string | null>(null);
+  const [showUpgradeModal, setShowUpgradeModal] = useState(false);
+  const { tier } = useSubscription();
   const { notes: rawNotes, isLoading, create, update, remove } = useNotes({
     search: searchTerm,
     titlesOnly,
@@ -81,11 +86,21 @@ export default function NotesBrowserScreen() {
   };
 
   const handleNewNote = () => {
+    if (!canCreateNote(tier, notes.length)) {
+      setShowUpgradeModal(true);
+      AccessibilityInfo.announceForAccessibility('Note limit reached. Upgrade to create more notes.');
+      return;
+    }
     setEditingNote(null);
     setIsEditorVisible(true);
   };
 
   const handleNewTaskList = () => {
+    if (!canCreateNote(tier, notes.length)) {
+      setShowUpgradeModal(true);
+      AccessibilityInfo.announceForAccessibility('Note limit reached. Upgrade to create more notes.');
+      return;
+    }
     setEditingNote(null);
     setIsTaskListEditorVisible(true);
   };
@@ -543,6 +558,13 @@ export default function NotesBrowserScreen() {
         visible={isSearchModalVisible}
         onSearch={handleSearch}
         onClose={() => setIsSearchModalVisible(false)}
+      />
+
+      <UpgradePromptModal
+        visible={showUpgradeModal}
+        onClose={() => setShowUpgradeModal(false)}
+        feature="Creating more notes"
+        requiredTier="premium"
       />
     </LinearGradient>
   );

@@ -22,7 +22,10 @@ import { GlassCard } from './GlassCard';
 import { ConfirmDialog } from './ConfirmDialog';
 import { TaskItemEditorModal, TaskItemData } from './TaskItemEditorModal';
 import { ColorPickerButton } from './ColorPickerButton';
+import { UpgradePromptModal } from './UpgradePromptModal';
 import { getColorForNote } from './NoteListItem';
+import { useSubscription } from '../contexts/SubscriptionContext';
+import { canAddTask } from '../lib/subscription';
 import { theme } from '../theme/theme';
 
 export interface Task {
@@ -65,6 +68,8 @@ export const TaskListEditorModal: React.FC<TaskListEditorModalProps> = ({
   const [editingTaskId, setEditingTaskId] = useState<string | null>(null);
   const [selectedTaskId, setSelectedTaskId] = useState<string | null>(null);
   const [isTaskItemEditorVisible, setIsTaskItemEditorVisible] = useState(false);
+  const [showUpgradeModal, setShowUpgradeModal] = useState(false);
+  const { tier } = useSubscription();
   const titleInputRef = useRef<TextInput>(null);
   const taskInputRefs = useRef<{ [key: string]: TextInput }>({});
 
@@ -157,6 +162,10 @@ export const TaskListEditorModal: React.FC<TaskListEditorModalProps> = ({
   };
 
   const handleAddTask = () => {
+    if (!canAddTask(tier, tasks.length)) {
+      setShowUpgradeModal(true);
+      return;
+    }
     const newTask: Task = {
       id: `temp-${Date.now()}`,
       text: '',
@@ -452,6 +461,13 @@ export const TaskListEditorModal: React.FC<TaskListEditorModalProps> = ({
         onSave={handleSaveTaskItem}
         onDelete={handleDeleteTaskItem}
         onClose={() => setIsTaskItemEditorVisible(false)}
+      />
+
+      <UpgradePromptModal
+        visible={showUpgradeModal}
+        onClose={() => setShowUpgradeModal(false)}
+        feature="Adding more tasks"
+        requiredTier="premium"
       />
     </Modal>
   );
