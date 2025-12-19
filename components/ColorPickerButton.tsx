@@ -5,26 +5,33 @@
  */
 
 import React, { useState } from 'react';
-import { View, Pressable, StyleSheet, Modal } from 'react-native';
+import { View, Pressable, StyleSheet, Modal, Text } from 'react-native';
 import { Palette } from 'lucide-react-native';
 import { PAINT_SPLASH_COLORS } from './NoteListItem';
 import { theme } from '../theme/theme';
 
 interface ColorPickerButtonProps {
   selectedColor?: string;
-  onColorSelect: (color: string) => void;
+  onColorSelect: (color: string | undefined) => void;
   disabled?: boolean;
+  showClearButton?: boolean;
 }
 
 export const ColorPickerButton: React.FC<ColorPickerButtonProps> = ({
   selectedColor,
   onColorSelect,
   disabled = false,
+  showClearButton = false,
 }) => {
   const [isPickerVisible, setIsPickerVisible] = useState(false);
 
   const handleColorSelect = (color: string) => {
     onColorSelect(color);
+    setIsPickerVisible(false);
+  };
+
+  const handleClearColor = () => {
+    onColorSelect(undefined);
     setIsPickerVisible(false);
   };
 
@@ -66,6 +73,16 @@ export const ColorPickerButton: React.FC<ColorPickerButtonProps> = ({
                 />
               ))}
             </View>
+            {showClearButton && selectedColor && (
+              <Pressable
+                onPress={handleClearColor}
+                style={styles.clearButton}
+                accessibilityLabel="clear-color-button"
+                accessibilityRole="button"
+              >
+                <Text style={styles.clearButtonText}>Clear Color</Text>
+              </Pressable>
+            )}
           </View>
         </Pressable>
       </Modal>
@@ -118,5 +135,20 @@ const styles = StyleSheet.create({
     borderColor: theme.palette.textPrimary,
     borderWidth: 3,
     ...theme.shadows.buttonShadow,
+  },
+  clearButton: {
+    marginTop: theme.spacing.lg,
+    paddingVertical: theme.spacing.sm,
+    paddingHorizontal: theme.spacing.md,
+    backgroundColor: theme.palette.inputBg,
+    borderRadius: theme.radii.button,
+    borderWidth: 1,
+    borderColor: theme.palette.glassBorder,
+    alignItems: 'center',
+  },
+  clearButtonText: {
+    ...theme.typography.body,
+    color: theme.palette.textPrimary,
+    fontWeight: '500',
   },
 });

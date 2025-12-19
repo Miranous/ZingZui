@@ -33,12 +33,14 @@ type SortMode = 'title-asc' | 'title-desc' | 'updated';
 export default function NotesBrowserScreen() {
   const [searchTerm, setSearchTerm] = useState('');
   const [titlesOnly, setTitlesOnly] = useState(true);
+  const [searchColor, setSearchColor] = useState<string | undefined>(undefined);
   const [showPreview, setShowPreview] = useState(false);
   const [sortMode, setSortMode] = useState<SortMode>('updated');
   const [hoveredButton, setHoveredButton] = useState<string | null>(null);
   const { notes: rawNotes, isLoading, create, update, remove } = useNotes({
     search: searchTerm,
     titlesOnly,
+    color: searchColor,
   });
 
   // Sort notes based on current sort mode
@@ -103,15 +105,17 @@ export default function NotesBrowserScreen() {
     setIsDeleteModalVisible(true);
   };
 
-  const handleSearch = (search: string, titlesOnlyParam: boolean) => {
+  const handleSearch = (search: string, titlesOnlyParam: boolean, color?: string) => {
     setSearchTerm(search);
     setTitlesOnly(titlesOnlyParam);
+    setSearchColor(color);
     setSelectedNoteId(null);
   };
 
   const handleClearSearch = () => {
     setSearchTerm('');
     setTitlesOnly(true);
+    setSearchColor(undefined);
   };
 
   const handleToggleSort = () => {
@@ -433,10 +437,12 @@ export default function NotesBrowserScreen() {
         </View>
       </View>
 
-      {searchTerm && (
+      {(searchTerm || searchColor) && (
         <View style={styles.searchInfo}>
           <Text style={styles.searchText}>
-            Searching for: "{searchTerm}" {titlesOnly ? '(titles only)' : '(titles & body)'}
+            {searchTerm && `Searching for: "${searchTerm}" ${titlesOnly ? '(titles only)' : '(titles & body)'}`}
+            {searchTerm && searchColor && ' • '}
+            {searchColor && `Color: ${searchColor}`}
           </Text>
           <ThemedButton
             title="Clear"

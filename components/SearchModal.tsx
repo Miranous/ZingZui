@@ -19,27 +19,31 @@ import { X, Search } from 'lucide-react-native';
 import { GlassCard } from './GlassCard';
 import { ThemedInput } from './ThemedInput';
 import { ThemedButton } from './ThemedButton';
+import { ColorPickerButton } from './ColorPickerButton';
 import { theme } from '../theme/theme';
 
 interface SearchModalProps {
   visible: boolean;
-  onSearch: (searchTerm: string, titlesOnly: boolean) => void;
+  onSearch: (searchTerm: string, titlesOnly: boolean, color?: string) => void;
   onClose: () => void;
 }
 
 export function SearchModal({ visible, onSearch, onClose }: SearchModalProps) {
   const [searchTerm, setSearchTerm] = useState('');
   const [titlesOnly, setTitlesOnly] = useState(true);
+  const [color, setColor] = useState<string | undefined>(undefined);
 
   const handleSearch = () => {
-    onSearch(searchTerm, titlesOnly);
+    onSearch(searchTerm, titlesOnly, color);
     setSearchTerm('');
+    setColor(undefined);
     onClose();
   };
 
   const handleClose = () => {
     setSearchTerm('');
     setTitlesOnly(true);
+    setColor(undefined);
     onClose();
   };
 
@@ -96,6 +100,16 @@ export function SearchModal({ visible, onSearch, onClose }: SearchModalProps) {
                     <Text style={styles.checkboxLabel}>Titles only</Text>
                   </Pressable>
 
+                  <View style={styles.colorFilterContainer}>
+                    <Text style={styles.colorFilterLabel}>Filter by color:</Text>
+                    <ColorPickerButton
+                      selectedColor={color}
+                      onColorSelect={setColor}
+                      disabled={false}
+                      showClearButton={true}
+                    />
+                  </View>
+
                   <View style={styles.actions}>
                     <Pressable
                       onPress={handleClose}
@@ -113,9 +127,9 @@ export function SearchModal({ visible, onSearch, onClose }: SearchModalProps) {
                       style={[
                         styles.iconButton,
                         styles.primaryButton,
-                        !searchTerm.trim() && styles.disabledButton,
+                        (!searchTerm.trim() && !color) && styles.disabledButton,
                       ]}
-                      disabled={!searchTerm.trim()}
+                      disabled={!searchTerm.trim() && !color}
                       accessibilityLabel="confirm-search-button"
                     >
                       <Search
@@ -195,6 +209,16 @@ const styles = StyleSheet.create({
   },
   checkboxLabel: {
     ...theme.typography.body,
+  },
+  colorFilterContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: theme.spacing.md,
+    paddingVertical: theme.spacing.sm,
+  },
+  colorFilterLabel: {
+    ...theme.typography.body,
+    color: theme.palette.textSecondary,
   },
   actions: {
     flexDirection: 'row',

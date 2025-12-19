@@ -52,6 +52,7 @@ export async function getNotes(
   options?: {
     search?: string;
     titlesOnly?: boolean;
+    color?: string;
     limit?: number;
     offset?: number;
   }
@@ -69,6 +70,10 @@ export async function getNotes(
       } else {
         query = query.or(`title.ilike.%${options.search}%,body.ilike.%${options.search}%`);
       }
+    }
+
+    if (options?.color) {
+      query = query.eq('color', options.color);
     }
 
     if (options?.limit) {

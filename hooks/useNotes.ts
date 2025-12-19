@@ -8,7 +8,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { getNotes, createNote, updateNote, deleteNote, Note, CreateNoteData, UpdateNoteData } from '../lib/notes';
 import { useAuth } from '../contexts/AuthContext';
 
-export function useNotes(options?: { search?: string; titlesOnly?: boolean }) {
+export function useNotes(options?: { search?: string; titlesOnly?: boolean; color?: string }) {
   const { user } = useAuth();
   const [notes, setNotes] = useState<Note[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -35,7 +35,7 @@ export function useNotes(options?: { search?: string; titlesOnly?: boolean }) {
     }
 
     setIsLoading(false);
-  }, [user?.id, options?.search, options?.titlesOnly]);
+  }, [user?.id, options?.search, options?.titlesOnly, options?.color]);
 
   useEffect(() => {
     fetchNotes();
